@@ -1,0 +1,66 @@
+<mjml>
+  <mj-body>
+    <mj-section>
+      <mj-column>
+        <mj-text
+          font-size="16px"
+          color="#444444"
+          font-family="helvetica"
+          align="center"
+          >${originName}</mj-text
+        >
+
+        <mj-divider border-color="#444444"></mj-divider>
+
+        <mj-text font-size="16px" color="#666666" font-family="helvetica"
+          >Hello,</mj-text
+        >
+
+        <mj-text
+          font-size="16px"
+          color="#666666"
+          font-family="helvetica"
+          line-height="1.5"
+          >We received a login request to our services with this email
+          address:</mj-text
+        >
+
+        <mj-text
+          font-size="16px"
+          color="#000000"
+          font-family="helvetica"
+          line-height="1.5"
+          >${userEmail}</mj-text
+        >
+
+        <mj-text
+          font-size="16px"
+          color="#666666"
+          font-family="helvetica"
+          line-height="1.5"
+          >Click on the button below to continue:</mj-text
+        >
+
+        <mj-button href="${url}" align="left"> Log In </mj-button>
+
+        <mj-text
+          font-size="16px"
+          color="#666666"
+          font-family="helvetica"
+          line-height="1.5"
+          >You can also use this URL:</mj-text
+        >
+
+        <mj-text
+          font-size="16px"
+          color="#000000"
+          font-family="helvetica"
+          line-height="1.5"
+          >${url}</mj-text
+        >
+
+        <mj-divider border-color="#444444"></mj-divider>
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>
