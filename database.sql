@@ -14,7 +14,7 @@ DROP ROLE IF EXISTS hecate_email;
 -- EMAIL MODULE
 --------------------------------------------------------------------------------
 
-CREATE ROLE hecate_email WITH LOGIN PASSWORD 'mashed-provolone-parchment-neon';
+CREATE ROLE hecate_email WITH LOGIN PASSWORD '### UPDATE ###';
 
 CREATE TABLE IF NOT EXISTS verification_token
 (
