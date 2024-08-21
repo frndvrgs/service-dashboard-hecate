@@ -1,16 +1,16 @@
 import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import GitHubProvider from "next-auth/providers/github";
-// import EmailProvider from "next-auth/providers/email";
-// import PostgresAdapter from "@auth/pg-adapter";
+import EmailProvider from "next-auth/providers/email";
+import PostgresAdapter from "@auth/pg-adapter";
 import { Pool } from "pg";
 import { default as nodemailer } from "nodemailer";
-// import { settings } from "../../../../settings";
-// import {
-//   makeEmailHTMLTemplate,
-//   makeEmailTextTemplate,
-// } from "../../email/template";
-// import type { Adapter } from "next-auth/adapters";
+import { settings } from "../../../../settings";
+import {
+  makeEmailHTMLTemplate,
+  makeEmailTextTemplate,
+} from "../../email/template";
+import type { Adapter } from "next-auth/adapters";
 import type { NextAuthOptions } from "next-auth";
 
 const pool = new Pool({
@@ -25,7 +25,7 @@ const pool = new Pool({
 });
 
 const authOptions: NextAuthOptions = {
-  // adapter: PostgresAdapter(pool) as Adapter, // Type seems wrong, using assertion, to be checked
+  adapter: PostgresAdapter(pool) as Adapter, // Type seems wrong, using assertion, to be checked
   session: {
     strategy: "jwt",
   },
@@ -56,55 +56,55 @@ const authOptions: NextAuthOptions = {
         };
       },
     }),
-    // EmailProvider({
-    //   server: {
-    //     // pool: true,
-    //     // secure: true,
-    //     host: "smtp.sendgrid.net",
-    //     port: 587,
-    //     auth: {
-    //       user: "apikey",
-    //       pass: process.env.SENDGRID_API_KEY,
-    //     },
-    //   },
-    //   from: process.env.SENDGRID_EMAIL_FROM,
-    //   async sendVerificationRequest({
-    //     identifier: email,
-    //     url,
-    //     provider: { server, from },
-    //   }) {
-    //     console.log("Sending email to:", email);
-    //     console.log("Verification URL:", url);
+    EmailProvider({
+      server: {
+        // pool: true,
+        // secure: true,
+        host: "smtp.sendgrid.net",
+        port: 587,
+        auth: {
+          user: "apikey",
+          pass: process.env.SENDGRID_API_KEY,
+        },
+      },
+      from: process.env.SENDGRID_EMAIL_FROM,
+      async sendVerificationRequest({
+        identifier: email,
+        url,
+        provider: { server, from },
+      }) {
+        console.log("Sending email to:", email);
+        console.log("Verification URL:", url);
 
-    //     const { host } = new URL(url);
-    //     const transport = nodemailer.createTransport(server);
+        const { host } = new URL(url);
+        const transport = nodemailer.createTransport(server);
 
-    //     try {
-    //       const name = settings.APP.SERVICE_NAME;
-    //       const result = await transport.sendMail({
-    //         to: email,
-    //         from: from,
-    //         subject: `Sign in to ${host}`,
-    //         text: makeEmailTextTemplate({ url, host }),
-    //         html: makeEmailHTMLTemplate({ url, name, host, email }),
-    //       });
+        try {
+          const name = settings.APP.SERVICE_NAME;
+          const result = await transport.sendMail({
+            to: email,
+            from: from,
+            subject: `Sign in to ${host}`,
+            text: makeEmailTextTemplate({ url, host }),
+            html: makeEmailHTMLTemplate({ url, name, host, email }),
+          });
 
-    //       const failed = result.rejected.concat(result.pending).filter(Boolean);
-    //       if (failed.length) {
-    //         throw new Error(
-    //           `Email(s) (${failed.join(", ")}) could not be sent`,
-    //         );
-    //       }
+          const failed = result.rejected.concat(result.pending).filter(Boolean);
+          if (failed.length) {
+            throw new Error(
+              `Email(s) (${failed.join(", ")}) could not be sent`,
+            );
+          }
 
-    //       console.log("Verification email sent successfully");
-    //     } catch (error) {
-    //       console.error("Error sending verification email", error);
-    //       throw new Error("Failed to send verification email");
-    //     } finally {
-    //       transport.close();
-    //     }
-    //   },
-    // }),
+          console.log("Verification email sent successfully");
+        } catch (error) {
+          console.error("Error sending verification email", error);
+          throw new Error("Failed to send verification email");
+        } finally {
+          transport.close();
+        }
+      },
+    }),
   ],
   pages: {
     signIn: "/login",

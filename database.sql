@@ -71,3 +71,5 @@ CREATE TABLE IF NOT EXISTS users
 );
  
 ALTER TABLE users OWNER TO hecate_email;
+
+GRANT ALL PRIVILEGES ON DATABASE service_dashboard_hecate_email TO hecate_email;
