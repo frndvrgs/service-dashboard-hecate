@@ -41,7 +41,7 @@ export async function createAccount(
 
   try {
     const response = await fetch(
-      `${API.AETHER.v1.HOST}${API.AETHER.v1.GRAPHQL}`,
+      `${API.CMS.HOST}${API.CMS.PUBLIC.ENDPOINT_GRAPHQL}`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },

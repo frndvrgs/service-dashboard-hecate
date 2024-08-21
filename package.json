@@ -1,5 +1,5 @@
 {
-  "name": "service-dashboard-nemesis",
+  "name": "service-dashboard-hecate",
   "version": "1.0.0",
   "private": true,
   "scripts": {
@@ -11,9 +11,7 @@
   },
   "dependencies": {
     "@auth/pg-adapter": "^1.4.2",
-    "argon2": "^0.40.3",
     "cookie-signature": "^1.2.1",
-    "jose": "^5.7.0",
     "next": "14.2.5",
     "next-auth": "^4.24.7",
     "next-seo": "^6.5.0",

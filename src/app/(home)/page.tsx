@@ -28,7 +28,7 @@ const ASCII = `
 
 const Home = () => {
   return (
-    <section className="text-center">
+    <section className="text-center text-sm">
       <ASCIIArt art={ASCII} />
     </section>
   );
