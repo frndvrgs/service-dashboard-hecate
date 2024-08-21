@@ -1,12 +1,12 @@
 -- psql --host=localhost --port=5432 --username=postgres --echo-all --file=database.sql
 
-CREATE DATABASE hecate_service_dashboard
+CREATE DATABASE service_dashboard_hecate_email
 WITH ENCODING 'UTF8'
      LC_COLLATE 'en_US.UTF-8'
      LC_CTYPE 'en_US.UTF-8'
      TEMPLATE template0;
 
-\connect hecate_service_dashboard;
+\connect service_dashboard_hecate_email;
 
 DROP ROLE IF EXISTS hecate_email;
 
