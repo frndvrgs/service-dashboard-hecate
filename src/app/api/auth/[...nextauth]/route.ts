@@ -1,16 +1,16 @@
 import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import GitHubProvider from "next-auth/providers/github";
-import EmailProvider from "next-auth/providers/email";
-import PostgresAdapter from "@auth/pg-adapter";
+// import EmailProvider from "next-auth/providers/email";
+// import PostgresAdapter from "@auth/pg-adapter";
 import { Pool } from "pg";
 import { default as nodemailer } from "nodemailer";
-import { settings } from "../../../../settings";
-import {
-  makeEmailHTMLTemplate,
-  makeEmailTextTemplate,
-} from "../../email/template";
-import type { Adapter } from "next-auth/adapters";
+// import { settings } from "../../../../settings";
+// import {
+//   makeEmailHTMLTemplate,
+//   makeEmailTextTemplate,
+// } from "../../email/template";
+// import type { Adapter } from "next-auth/adapters";
 import type { NextAuthOptions } from "next-auth";
 
 const pool = new Pool({
@@ -25,7 +25,7 @@ const pool = new Pool({
 });
 
 const authOptions: NextAuthOptions = {
-  adapter: PostgresAdapter(pool) as Adapter, // Type seems wrong, using assertion, to be checked
+  // adapter: PostgresAdapter(pool) as Adapter, // Type seems wrong, using assertion, to be checked
   session: {
     strategy: "jwt",
   },
