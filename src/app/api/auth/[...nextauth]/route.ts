@@ -10,8 +10,8 @@ import {
   makeEmailHTMLTemplate,
   makeEmailTextTemplate,
 } from "../../email/template";
-
 import type { Adapter } from "next-auth/adapters";
+import type { NextAuthOptions } from "next-auth";
 
 const pool = new Pool({
   user: process.env.DATABASE_USER,
@@ -24,9 +24,7 @@ const pool = new Pool({
   connectionTimeoutMillis: 2000,
 });
 
-import type { NextAuthOptions } from "next-auth";
-
-export const authOptions: NextAuthOptions = {
+const authOptions: NextAuthOptions = {
   adapter: PostgresAdapter(pool) as Adapter, // Type seems wrong, using assertion, to be checked
   session: {
     strategy: "jwt",
