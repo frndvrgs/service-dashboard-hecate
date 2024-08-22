@@ -25,7 +25,7 @@ const pool = new Pool({
 });
 
 const authOptions: NextAuthOptions = {
-  adapter: PostgresAdapter(pool) as Adapter, // Type seems wrong, using assertion, to be checked
+  adapter: PostgresAdapter(pool) as Adapter, // type seems wrong, using assertion, to be checked
   session: {
     strategy: "jwt",
   },
@@ -73,6 +73,7 @@ const authOptions: NextAuthOptions = {
         url,
         provider: { server, from },
       }) {
+        // logging to be improved / development stuff
         console.log("Sending email to:", email);
         console.log("Verification URL:", url);
 
@@ -95,7 +96,7 @@ const authOptions: NextAuthOptions = {
               `Email(s) (${failed.join(", ")}) could not be sent`,
             );
           }
-
+          // logging to be improved / development stuff
           console.log("Verification email sent successfully");
         } catch (error) {
           console.error("Error sending verification email", error);
@@ -117,14 +118,18 @@ const authOptions: NextAuthOptions = {
 
       if (account?.provider === "github") {
         console.log("github login", user, profile);
+        // to be improved /implementing cms backend multiple e-mail on accounts
       }
 
       if (account?.provider === "google") {
         console.log("google login", user, profile);
+        // to be improved /implementing cms backend multiple e-mail on accounts
       }
 
       if (account?.provider === "email") {
         console.log("e-mail login", user, profile, email);
+        // to be improved /implementing cms backend multiple e-mail on accounts
+
         // await db.connect();
         // const userExists = await User.findOne({
         //   email: user.email,  //the user object has an email property, which contains the email the user entered.

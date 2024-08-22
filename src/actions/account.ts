@@ -25,6 +25,8 @@ const validateFields = (formData: FormData) => {
   });
 };
 
+// account creation is not working right now, to be implemented with graphql
+
 export async function createAccount(
   _prevState: FormState,
   formData: FormData,
