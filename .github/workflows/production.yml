@@ -2,41 +2,41 @@ name: CI/CD - Production
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-    - name: Use Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: '20.x'
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "20.x"
 
-    - name: Clear npm cache
-      run: npm cache clean --force
+      - name: Clear npm cache
+        run: npm cache clean --force
 
-    - name: Install dependencies
-      run: |
-        for i in 1 2 3 4 5; do
-          npm ci && break
-          echo "npm ci failed, retrying in 5 seconds."
-          sleep 5
-        done
+      - name: Install dependencies
+        run: |
+          for i in 1 2 3 4 5; do
+            npm ci && break
+            echo "npm ci failed, retrying in 5 seconds."
+            sleep 5
+          done
 
-    # - name: Run circular dependencies check
-    #   run: npm run dpdm
+      # - name: Run circular dependencies check
+      #   run: npm run dpdm
 
-    # - name: Run tests
-    #   run: npm run test
+      # - name: Run tests
+      #   run: npm run test
 
-    - name: Build
-      run: npm run build
+      - name: Build
+        run: npm run build
 
-    - name: Prepare dependencies
-      run: |
-        rm -rf node_modules
-        npm ci --only=production
+      - name: Prepare dependencies
+        run: |
+          rm -rf node_modules
+          npm ci --only=production

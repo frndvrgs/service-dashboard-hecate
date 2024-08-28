@@ -34,6 +34,14 @@ export const HomeHeader = () => {
             </>
           ) : (
             <>
+              <Link href="/admin">
+                <button
+                  type="button"
+                  className="bg-transparent border border-gray-800 text-white hover:text-gray-300 py-2 px-4 rounded-md"
+                >
+                  Admin
+                </button>
+              </Link>
               <Link href="/account">
                 <button
                   type="button"

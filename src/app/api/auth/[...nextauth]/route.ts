@@ -9,9 +9,11 @@ import { settings } from "../../../../settings";
 import {
   makeEmailHTMLTemplate,
   makeEmailTextTemplate,
-} from "../../email/template";
-import type { Adapter } from "next-auth/adapters";
+} from "../../../../common/email/template";
+import { syncAccount } from "@/actions/account";
+
 import type { NextAuthOptions } from "next-auth";
+import type { Adapter } from "next-auth/adapters";
 
 const pool = new Pool({
   user: process.env.DATABASE_USER,
@@ -114,8 +116,6 @@ const authOptions: NextAuthOptions = {
   },
   callbacks: {
     async signIn({ account, user, profile, email }) {
-      console.log("signIn", account);
-
       if (account?.provider === "github") {
         console.log("github login", user, profile);
         // to be improved /implementing cms backend multiple e-mail on accounts
@@ -154,9 +154,17 @@ const authOptions: NextAuthOptions = {
       }
       return baseUrl;
     },
-    async jwt({ token, user }) {
-      // to be improved with cms user scopes
-      return { ...token, ...user };
+    async jwt({ token, account, profile, user, trigger }) {
+      // if triggered by signin, calling cms account synchronization action
+      if (trigger === "signIn" && user?.email && account?.provider) {
+        await syncAccount(user.email, {
+          [account.provider]: {
+            ...user,
+            profile,
+          },
+        });
+      }
+      return token;
     },
   },
 };

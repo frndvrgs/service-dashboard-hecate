@@ -17,7 +17,7 @@ export const AccountHeader = () => {
       await signOut({ redirect: false });
       router.push("/");
     } catch (error) {
-      console.error("Logout failed", error);
+      console.error("logout failed", error);
     } finally {
       setIsLoggingOut(false);
     }
@@ -35,6 +35,7 @@ export const AccountHeader = () => {
           <HeaderLink href="/account/settings">Settings</HeaderLink>
         </div>
         <div className="flex space-x-4 items-center">
+          <HeaderLink href="/" exact>Back to Home</HeaderLink>
           <Link href="/dashboard">
             <button
               type="button"

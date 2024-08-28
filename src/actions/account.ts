@@ -1,80 +1,72 @@
 "use server";
 
-import { z } from "zod";
 import { settings } from "@/settings";
+import { graphqlClient } from "@/common/graphql/client";
+import { cookieTools } from "@/common/utils/cookieTools";
+import { SYNC_ACCOUNT, LIST_ACCOUNTS } from "@/interface/v1/schemas/account";
 
 const { API } = settings;
 
-export type FormState = {
-  success: boolean;
-  validation?: {
-    email?: string[];
-  } | null;
-  message: string;
-  data?: any;
-  errors?: any;
-};
-
-const accountSchema = z.object({
-  email: z.string().email("Invalid email address."),
-});
-
-const validateFields = (formData: FormData) => {
-  return accountSchema.safeParse({
-    email: formData.get("email"),
-  });
-};
-
-// account creation is not working right now, to be implemented with graphql
-
-export async function createAccount(
-  _prevState: FormState,
-  formData: FormData,
-): Promise<FormState> {
-  const validatedFields = validateFields(formData);
-
-  if (!validatedFields.success) {
-    return {
-      success: false,
-      validation: validatedFields.error.flatten().fieldErrors,
-      message: "Invalid input. Please check the validation errors above.",
-    };
-  }
-
+export const syncAccount = async (
+  email: string,
+  details: Record<string, unknown>,
+): Promise<void> => {
   try {
-    const response = await fetch(
-      `${API.CMS.HOST}${API.CMS.PUBLIC.ENDPOINT_GRAPHQL}`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(validatedFields.data),
+    // creating oauth account sync JWT token, 10 minutes expiration
+    const secret = API.CMS.TOKEN_SECRET;
+    const oauthToken = await cookieTools.createToken(email, secret, "10m");
+
+    const response = await fetch(`${API.CMS.ENDPOINT.PUBLIC.ACCOUNT_SYNC}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${oauthToken}`,
       },
-    );
+      body: JSON.stringify({
+        email,
+        details,
+      }),
+      credentials: "include",
+    });
 
     if (!response.ok) {
       const errorData = await response.json();
-      console.error("Error creating session:", errorData);
-      return {
-        success: false,
-        errors: errorData,
-        message:
-          errorData.message || "Failed to create account. Please try again.",
-      };
+      return console.error("error synchronizing account:", errorData);
     }
 
     const responseData = await response.json();
+    cookieTools.setCookiesFromResponse(response, "user");
 
-    return {
-      success: true,
-      message: "Account created successfully!",
-      data: responseData,
-    };
+    console.log("account successfully synchronized", responseData);
   } catch (error) {
-    console.error("Error creating account:", error);
-    return {
-      success: false,
-      errors: error instanceof Error ? error.stack : String(error),
-      message: "Failed to create account. Please try again later.",
-    };
+    console.error("syncAccount error:", error);
   }
-}
+};
+
+export const syncAccountGraphql = async (
+  variables: API.GraphQL.v1.syncAccountMutationArgs,
+): Promise<API.GraphQL.v1.Mutation["syncAccount"] | void> => {
+  try {
+    const response = await graphqlClient.request<
+      API.GraphQL.v1.Mutation["syncAccount"],
+      API.GraphQL.v1.syncAccountMutationArgs
+    >(SYNC_ACCOUNT, variables);
+    return response;
+  } catch (error) {
+    console.error("syncAccount error:", error);
+  }
+};
+
+export const listAccounts = async (
+  variables: API.GraphQL.v1.listAccountsQueryArgs,
+): Promise<API.GraphQL.v1.Query["listAccounts"] | void> => {
+  try {
+    const response = await graphqlClient.request<
+      API.GraphQL.v1.Query["listAccounts"],
+      API.GraphQL.v1.listAccountsQueryArgs
+    >(LIST_ACCOUNTS, variables);
+    return response;
+  } catch (error) {
+    console.error("listAccounts error:", error);
+  }
+};

@@ -1,4 +1,4 @@
-import { ASCIIArt } from "@/utils/ASCIIArt";
+import { ASCIIArt } from "@/common/utils/ASCIIArt";
 
 const ASCII = `
   ⠀⠀⠀⠀⠀⠀⠀⠀⢀⣴⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣄⠀⠀⠀⠀⠀⠀⠀⠀
