@@ -29,9 +29,11 @@ const Subscription = () => {
             error
           </div>
         ) : !readSubscriptionQuery.data?.output ? (
-            <AccountCreateSubscription  />
+          <AccountCreateSubscription />
         ) : (
-            <AccountSubscriptionDetails subscription={readSubscriptionQuery.data.output} />
+          <AccountSubscriptionDetails
+            subscription={readSubscriptionQuery.data.output}
+          />
         )}
       </div>
     </section>

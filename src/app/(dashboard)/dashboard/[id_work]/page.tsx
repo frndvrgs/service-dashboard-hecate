@@ -64,13 +64,19 @@ const DashboardWork = ({ params }: AdminWorkProps) => {
                 work={readWorkQuery.data.output}
                 workSocket={workSocket}
               />
-              <DashboardWorkCommandPanel work={readWorkQuery.data.output}                 processType={data_work?.process_type}/>
+              <DashboardWorkCommandPanel
+                work={readWorkQuery.data.output}
+                processType={data_work?.process_type}
+              />
             </div>
             <div className="md:col-span-2 space-y-6">
               <Breadcrumb
                 items={[
                   {
-                    label: data_work?.process_type === 'SOURCE_CODE' ? "Source Code Analysis" : "Pull Request Analysis",
+                    label:
+                      data_work?.process_type === "SOURCE_CODE"
+                        ? "Source Code Analysis"
+                        : "Pull Request Analysis",
                     href: `/dashboard/${data_work?.id_work}`,
                   },
                 ]}

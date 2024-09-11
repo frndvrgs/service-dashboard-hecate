@@ -16,7 +16,7 @@ interface DashboardWorkCommandPanelProps {
 
 export const DashboardWorkCommandPanel = ({
   work,
-  processType = 'SOURCE_CODE'
+  processType = "SOURCE_CODE",
 }: DashboardWorkCommandPanelProps) => {
   const queryClient = useQueryClient();
   const { operationStatus, updateOperationStatus } = useOperationStatus();
@@ -81,26 +81,25 @@ export const DashboardWorkCommandPanel = ({
           `${hasCodeDump ? "Re-Process Context" : "Process Context"}`,
           <CodeBracketIcon className="w-5 h-5" />,
         )}
-        {processType === 'SOURCE_CODE' ? (
+        {processType === "SOURCE_CODE" ? (
           <>
-                  {renderCommandButton(
-          "analyze_source_code",
-          "Analyze Code",
-          <MagnifyingGlassIcon className="w-5 h-5" />,
-          !hasCodeDump,
-        )}
+            {renderCommandButton(
+              "analyze_source_code",
+              "Analyze Code",
+              <MagnifyingGlassIcon className="w-5 h-5" />,
+              !hasCodeDump,
+            )}
           </>
-        ): (
+        ) : (
           <>
-                  {renderCommandButton(
-          "analyze_pull_request",
-          "Analyze Pull Request",
-          <MagnifyingGlassIcon className="w-5 h-5" />,
-          !hasCodeDump,
-        )}
+            {renderCommandButton(
+              "analyze_pull_request",
+              "Analyze Pull Request",
+              <MagnifyingGlassIcon className="w-5 h-5" />,
+              !hasCodeDump,
+            )}
           </>
         )}
-
       </div>
     </div>
   );

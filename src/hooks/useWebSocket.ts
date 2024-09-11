@@ -6,7 +6,9 @@ import { settings } from "@/settings";
 export function useWebSocket(id: string | null) {
   const [socket, setSocket] = useState<Socket | null>(null);
   const [status, setStatus] = useState<string | null>(null);
-  const [command, setCommand] = useState<'dump_source_code' | 'analyze_source_code' | 'analyze_pull_request' | null>(null);
+  const [command, setCommand] = useState<
+    "dump_source_code" | "analyze_source_code" | "analyze_pull_request" | null
+  >(null);
   const [data, setData] = useState<Record<string, any> | null>(null);
   const [error, setError] = useState<Record<string, any> | null>(null);
 

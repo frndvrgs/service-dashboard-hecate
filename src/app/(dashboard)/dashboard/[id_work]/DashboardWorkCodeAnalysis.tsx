@@ -15,12 +15,16 @@ interface DashboardWorkCodeAnalysisProps {
   work: API.GraphQL.v1.Work;
   workSocket: {
     socket: Socket | null;
-    command: 'dump_source_code' | 'analyze_source_code' | 'analyze_pull_request' | null;
+    command:
+      | "dump_source_code"
+      | "analyze_source_code"
+      | "analyze_pull_request"
+      | null;
     status: string | null;
     data: Record<string, any> | null;
     error: Record<string, any> | null;
   };
-  processType?: string
+  processType?: string;
 }
 
 interface AnalysisItem {
@@ -31,7 +35,7 @@ interface AnalysisItem {
 export const DashboardWorkCodeAnalysis = ({
   work,
   workSocket,
-  processType = 'SOURCE_CODE'
+  processType = "SOURCE_CODE",
 }: DashboardWorkCodeAnalysisProps) => {
   const [analyses, setAnalyses] = useState<AnalysisItem[]>([]);
   const [openAnalyses, setOpenAnalyses] = useState<Set<number>>(new Set([0]));
@@ -64,10 +68,10 @@ export const DashboardWorkCodeAnalysis = ({
   ]);
 
   const commandDescription = {
-    dump_source_code: 'Processing Context',
-    analyze_source_code: 'Analyzing Source Code',
-    analyze_pull_request: 'Analyzing Pull Request'
-  }
+    dump_source_code: "Processing Context",
+    analyze_source_code: "Analyzing Source Code",
+    analyze_pull_request: "Analyzing Pull Request",
+  };
 
   const renderStatusIcon = () => {
     if (workSocket.command) {
@@ -76,7 +80,9 @@ export const DashboardWorkCodeAnalysis = ({
       }
       return (
         <div className="flex space-x-2 justify-center">
-          <span className="text-[#777] animate-pulse">{commandDescription[workSocket.command]}</span>
+          <span className="text-[#777] animate-pulse">
+            {commandDescription[workSocket.command]}
+          </span>
           <EllipsisHorizontalCircleIcon className="w-6 h-6 animate-spin text-white" />
         </div>
       );
@@ -107,7 +113,10 @@ export const DashboardWorkCodeAnalysis = ({
         active: !work.document?.has_code_dump,
       },
       {
-        label: processType === 'SOURCE_CODE' ? "Analyze Source Code" : "Analyze Pull Request",
+        label:
+          processType === "SOURCE_CODE"
+            ? "Analyze Source Code"
+            : "Analyze Pull Request",
         description:
           "After processing, click on the 'Analyze Code' button to create your first code analysis.",
         active: work.document?.has_code_dump && analyses.length === 0,
@@ -181,22 +190,19 @@ export const DashboardWorkCodeAnalysis = ({
 
   return (
     <div className="space-y-6 relative">
-  <div className="absolute -top-16 right-0">{renderStatusIcon()}</div>
-            <div className="bg-[#1a1a1a] border border-[#2d2d2d] rounded-md overflow-hidden ">
-      <div className="p-4 border-b border-[#2d2d2d] last:border-b-0">
-
-        <div >
-          
-          {processType === 'PULL_REQUEST' && (
-            <div className="mb-4">
-              <span className="text-xl" >{work.pull_request_name}</span>
-            </div>
-          )}
-          {renderContent()}
+      <div className="absolute -top-16 right-0">{renderStatusIcon()}</div>
+      <div className="bg-[#1a1a1a] border border-[#2d2d2d] rounded-md overflow-hidden ">
+        <div className="p-4 border-b border-[#2d2d2d] last:border-b-0">
+          <div>
+            {processType === "PULL_REQUEST" && (
+              <div className="mb-4">
+                <span className="text-xl">{work.pull_request_name}</span>
+              </div>
+            )}
+            {renderContent()}
+          </div>
         </div>
       </div>
     </div>
-    </div>
-
   );
 };
