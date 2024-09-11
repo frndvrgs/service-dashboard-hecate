@@ -5,7 +5,7 @@ type OperationStatus = "idle" | "loading" | "success" | "error";
 
 interface OperationState {
   status: OperationStatus;
-  error: API.GraphQL.v1.Status | null;
+  error: API.GraphQL.v1.Status | Error | null;
 }
 
 export function useOperationStatus(debounceDelay: number = 3000) {
