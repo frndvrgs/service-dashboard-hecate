@@ -4,8 +4,8 @@ import Link from "next/link";
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-
 import { HeaderLink } from "./HeaderLink";
+import { SessionNavigation } from "./SessionNavigation";
 
 export const AccountHeader = () => {
   const router = useRouter();
@@ -28,32 +28,11 @@ export const AccountHeader = () => {
       <nav className="container mx-auto px-4 flex items-center justify-between whitespace-nowrap">
         <div className="flex space-x-4">
           <HeaderLink href="/account" exact>
-            Overview
+            My Account
           </HeaderLink>
-          <HeaderLink href="/account/profile">My Profile</HeaderLink>
           <HeaderLink href="/account/subscription">Subscription</HeaderLink>
-          <HeaderLink href="/account/settings">Settings</HeaderLink>
         </div>
-        <div className="flex space-x-4 items-center">
-          <HeaderLink href="/" exact>Back to Home</HeaderLink>
-          <Link href="/dashboard">
-            <button
-              type="button"
-              className="w-full bg-white text-black py-2 px-4 rounded"
-            >
-              Dashboard
-            </button>
-          </Link>
-          <button
-            onClick={handleLogout}
-            disabled={isLoggingOut}
-            className={
-              "bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded transition-colors duration-200 ease-in-out"
-            }
-          >
-            Logout
-          </button>
-        </div>
+        <SessionNavigation />
       </nav>
     </header>
   );

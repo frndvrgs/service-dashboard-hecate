@@ -20,7 +20,7 @@ export const HeaderLink = ({
     <Link
       href={href}
       className={`transition-colors duration-200 ease-in-out
-      ${isActive ? "text-white" : "text-gray-500 hover:text-white"}`}
+      ${isActive ? "text-white" : "text-[#646464] hover:text-white"}`}
     >
       {children}
     </Link>

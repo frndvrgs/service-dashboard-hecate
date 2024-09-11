@@ -6,12 +6,11 @@ import {
   IntrospectionField,
   IntrospectionEnumType,
 } from "graphql";
-import prettier from "prettier";
 import dotenv from "dotenv";
 
 dotenv.config();
 
-// this script generates a typescript global declaration file base on the graphql introspection
+// this script generates a typescript global declaration file based on the graphql introspection
 // by default, you can use the types directly from the global namespace API > [api_version] > [type_name]
 // and it must be generated periodically. the settings can be set on the .env file.
 
@@ -130,7 +129,7 @@ const mapGraphQLTypeToTypeScript = (type: string): string => {
     case "Boolean":
       return "boolean";
     case "DateTime":
-      return "Date";
+      return "string";
     case "JSONObject":
       return "Record<string, any>";
     default:
@@ -138,27 +137,41 @@ const mapGraphQLTypeToTypeScript = (type: string): string => {
   }
 };
 
-const getFieldType = (type: any): string => {
+const getFieldType = (
+  type: any,
+  enumNames: Set<string>,
+): { typeName: string; isOptional: boolean; isEnum: boolean } => {
   if (!type) {
     console.warn("undefined type encountered in getFieldType");
-    return "any";
+    return { typeName: "any", isOptional: true, isEnum: false };
   }
 
   switch (type.kind) {
     case "NON_NULL":
-      return getFieldType(type.ofType);
+      const innerType = getFieldType(type.ofType, enumNames);
+      return { ...innerType, isOptional: false };
     case "LIST":
-      return `${getFieldType(type.ofType)}[]`;
+      const listType = getFieldType(type.ofType, enumNames);
+      return {
+        typeName: `${listType.typeName}[]`,
+        isOptional: true,
+        isEnum: false,
+      };
     case "SCALAR":
     case "OBJECT":
     case "ENUM":
     case "INPUT_OBJECT":
     case "UNION":
     case "INTERFACE":
-      return mapGraphQLTypeToTypeScript(type.name);
+      const mappedType = mapGraphQLTypeToTypeScript(type.name);
+      return {
+        typeName: mappedType,
+        isOptional: true,
+        isEnum: enumNames.has(type.name),
+      };
     default:
       console.warn(`unknown type kind: ${type.kind}`);
-      return "any";
+      return { typeName: "any", isOptional: true, isEnum: false };
   }
 };
 
@@ -187,6 +200,12 @@ const generateGraphQLTypes = async (): Promise<void> => {
 
     console.info(":: generating types:\n");
 
+    const enumNames = new Set(
+      data.__schema.types
+        .filter((type: IntrospectionType) => type.kind === "ENUM")
+        .map((type: IntrospectionType) => type.name),
+    );
+
     // generate ENUM types
     data.__schema.types.forEach((type: IntrospectionType) => {
       if (!type.name.startsWith("__")) {
@@ -213,8 +232,12 @@ const generateGraphQLTypes = async (): Promise<void> => {
           console.info(type.name);
           type.fields.forEach((field: IntrospectionField) => {
             if (field && field.name && field.type) {
-              const fieldType = getFieldType(field.type);
-              types += `  ${field.name}: ${fieldType};\n`;
+              const { typeName, isOptional, isEnum } = getFieldType(
+                field.type,
+                enumNames,
+              );
+              const finalTypeName = isEnum ? `\`\${${typeName}}\`` : typeName;
+              types += `  ${field.name}${isOptional ? "?" : ""}: ${finalTypeName};\n`;
             } else {
               console.warn(
                 `skipping field due to missing data: ${JSON.stringify(field)}`,
@@ -231,8 +254,12 @@ const generateGraphQLTypes = async (): Promise<void> => {
           console.info(type.name);
           type.inputFields.forEach((field: IntrospectionInputValue) => {
             if (field && field.name && field.type) {
-              const fieldType = getFieldType(field.type);
-              types += `  ${field.name}: ${fieldType};\n`;
+              const { typeName, isOptional, isEnum } = getFieldType(
+                field.type,
+                enumNames,
+              );
+              const finalTypeName = isEnum ? `\`\${${typeName}}\`` : typeName;
+              types += `  ${field.name}${isOptional ? "?" : ""}: ${finalTypeName};\n`;
             } else {
               console.warn(
                 `skipping input field due to missing data: ${JSON.stringify(field)}`,
@@ -250,7 +277,7 @@ const generateGraphQLTypes = async (): Promise<void> => {
       }
     });
 
-    // generate ARGUMENT types for queries and mutationS
+    // generate ARGUMENT types for queries and mutations
     data.__schema.types.forEach((type: IntrospectionType) => {
       if (type.name === "Query" || type.name === "Mutation") {
         if ("fields" in type && Array.isArray(type.fields)) {
@@ -259,8 +286,14 @@ const generateGraphQLTypes = async (): Promise<void> => {
               types += `interface ${field.name}${type.name}Args {\n`;
               field.args.forEach((arg: IntrospectionInputValue) => {
                 if (arg && arg.name && arg.type) {
-                  const argType = getFieldType(arg.type);
-                  types += `  ${arg.name}: ${argType};\n`;
+                  const { typeName, isOptional, isEnum } = getFieldType(
+                    arg.type,
+                    enumNames,
+                  );
+                  const finalTypeName = isEnum
+                    ? `\`\${${typeName}}\``
+                    : typeName;
+                  types += `  ${arg.name}${isOptional ? "?" : ""}: ${finalTypeName};\n`;
                 }
               });
               types += "}\n\n";

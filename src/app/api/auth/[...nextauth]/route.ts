@@ -30,6 +30,8 @@ const authOptions: NextAuthOptions = {
   adapter: PostgresAdapter(pool) as Adapter, // type seems wrong, using assertion, to be checked
   session: {
     strategy: "jwt",
+    maxAge: 86400,
+    updateAge: 0,
   },
   secret: process.env.NEXTAUTH_SECRET,
   providers: [
@@ -165,6 +167,14 @@ const authOptions: NextAuthOptions = {
         });
       }
       return token;
+    },
+  },
+  events: {
+    async createUser({ user }) {
+      console.log("# createUser event", user);
+    },
+    async updateUser({ user }) {
+      console.log("# updateUser event", user);
     },
   },
 };

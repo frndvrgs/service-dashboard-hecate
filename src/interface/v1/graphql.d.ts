@@ -16,10 +16,12 @@ export declare global {
           FEATURE_CREATED = "FEATURE_CREATED",
           FEATURE_REMOVED = "FEATURE_REMOVED",
           FEATURE_UPDATED = "FEATURE_UPDATED",
+          GITHUB_API_ERROR = "GITHUB_API_ERROR",
           INACTIVE_TOKEN = "INACTIVE_TOKEN",
           INTERNAL_SERVER_ERROR = "INTERNAL_SERVER_ERROR",
           INVALID_AUTH_SCOPE = "INVALID_AUTH_SCOPE",
           INVALID_AUTH_TOKEN = "INVALID_AUTH_TOKEN",
+          INVALID_COMMAND = "INVALID_COMMAND",
           INVALID_INPUT = "INVALID_INPUT",
           INVALID_SESSION = "INVALID_SESSION",
           INVALID_SIGNATURE = "INVALID_SIGNATURE",
@@ -28,6 +30,7 @@ export declare global {
           INVALID_VALUE = "INVALID_VALUE",
           INVALID_VALUE_FORMAT = "INVALID_VALUE_FORMAT",
           INVALID_VALUE_LENGTH = "INVALID_VALUE_LENGTH",
+          MISSING_ENCRYPTION_KEY = "MISSING_ENCRYPTION_KEY",
           MISSING_PAYLOAD = "MISSING_PAYLOAD",
           NON_NULLABLE_VALUE = "NON_NULLABLE_VALUE",
           NOTHING_FOUND = "NOTHING_FOUND",
@@ -52,6 +55,7 @@ export declare global {
           VALIDATION_ERROR = "VALIDATION_ERROR",
           WEB_SERVER_ERROR = "WEB_SERVER_ERROR",
           WORKS_LISTED = "WORKS_LISTED",
+          WORK_COMMAND_PROCESSED = "WORK_COMMAND_PROCESSED",
           WORK_CREATED = "WORK_CREATED",
           WORK_REMOVED = "WORK_REMOVED",
           WORK_UPDATED = "WORK_UPDATED",
@@ -73,220 +77,256 @@ export declare global {
         }
 
         interface Account {
-          created_at: Date;
-          document: Record<string, any>;
+          created_at: string;
+          document?: Record<string, any>;
           email: string[];
+          has_github_token: boolean;
           id_account: string;
           scope: string;
-          updated_at: Date;
+          updated_at: string;
         }
 
-        interface AccountOutput {
-          output: Account;
-          status: StatusOutput;
+        interface AccountResponse {
+          output?: Account;
+          status: Status;
         }
 
-        interface AccountsOutput {
-          output: Account[];
-          status: StatusOutput;
+        interface AccountsResponse {
+          output?: Account[];
+          status: Status;
         }
 
         interface CreateFeatureInput {
+          document?: Record<string, any>;
           name: string;
-          subscriptionScope: string[];
+          process_type: string;
+          subscription_scope: string[];
         }
 
         interface CreateProfileInput {
-          name: string;
-          username: string;
+          document: Record<string, any>;
         }
 
         interface CreateSubscriptionInput {
-          document: Record<string, any>;
+          document?: Record<string, any>;
           status: string;
           type: string;
         }
 
         interface CreateWorkInput {
-          level: number;
+          document?: Record<string, any>;
+          id_pull_request?: string;
+          id_repository: string;
+          level?: number;
           name: string;
+          pull_request_name?: string;
+          repository_name?: string;
         }
 
         interface Feature {
-          created_at: Date;
-          document: Record<string, any>;
+          created_at: string;
+          document?: Record<string, any>;
           id_feature: string;
           name: string;
-          subscriptionScope: string[];
-          updated_at: Date;
+          process_type: string;
+          subscription_scope: string[];
+          updated_at: string;
         }
 
-        interface FeatureOutput {
-          output: Feature;
-          status: StatusOutput;
+        interface FeatureResponse {
+          output?: Feature;
+          status: Status;
         }
 
-        interface FeaturesOutput {
-          output: Feature[];
-          status: StatusOutput;
+        interface FeaturesResponse {
+          output?: Feature[];
+          status: Status;
         }
 
         interface Mutation {
-          createFeature: FeatureOutput;
-          createProfile: ProfileOutput;
-          createSubscription: SubscriptionOutput;
-          createWork: WorkOutput;
-          removeAccount: AccountOutput;
-          removeFeature: FeatureOutput;
-          removeProfile: ProfileOutput;
-          removeSubscription: SubscriptionOutput;
-          removeWork: WorkOutput;
-          syncAccount: AccountOutput;
-          updateAccount: AccountOutput;
-          updateFeature: FeatureOutput;
-          updateProfile: ProfileOutput;
-          updateSubscription: SubscriptionOutput;
-          updateWork: WorkOutput;
+          commandWork: WorkResponse;
+          createFeature: FeatureResponse;
+          createProfile: ProfileResponse;
+          createSubscription: SubscriptionResponse;
+          createWork: WorkResponse;
+          fetchAccountGitHub: AccountResponse;
+          removeAccount: StatusResponse;
+          removeFeature: FeatureResponse;
+          removeProfile: ProfileResponse;
+          removeSubscription: SubscriptionResponse;
+          removeWork: WorkResponse;
+          updateAccount: AccountResponse;
+          updateFeature: FeatureResponse;
+          updateProfile: ProfileResponse;
+          updateSubscription: SubscriptionResponse;
+          updateWork: WorkResponse;
+          upsertAccount: AccountResponse;
         }
 
         interface OptionsInput {
-          cache: boolean;
-          order: OrderInput[];
-          relations: string[];
-          select: string[];
-          skip: number;
-          take: number;
-          where: WhereInput[];
-          withDeleted: boolean;
+          cache?: boolean;
+          order?: OrderInput[];
+          relations?: string[];
+          select?: string[];
+          skip?: number;
+          take?: number;
+          where?: WhereInput[];
+          withDeleted?: boolean;
         }
 
         interface OrderInput {
           direction: string;
           field: string;
-          nulls: string;
+          nulls?: string;
         }
 
         interface Profile {
-          created_at: Date;
+          created_at: string;
           document: Record<string, any>;
           id_account: string;
           id_profile: string;
-          name: string;
-          updated_at: Date;
+          name?: string;
+          updated_at: string;
           username: string;
         }
 
-        interface ProfileOutput {
-          output: Profile;
-          status: StatusOutput;
+        interface ProfileResponse {
+          output?: Profile;
+          status: Status;
         }
 
-        interface ProfilesOutput {
-          output: Profile[];
-          status: StatusOutput;
+        interface ProfilesResponse {
+          output?: Profile[];
+          status: Status;
         }
 
         interface Query {
-          listAccounts: AccountsOutput;
-          listFeatures: FeaturesOutput;
-          listProfiles: ProfilesOutput;
-          listSubscriptions: SubscriptionsOutput;
-          listWorks: WorksOutput;
-          readAccount: AccountOutput;
-          readFeature: FeatureOutput;
-          readProfile: ProfileOutput;
-          readSubscription: SubscriptionOutput;
-          readWork: WorkOutput;
+          listAccounts: AccountsResponse;
+          listFeatures: FeaturesResponse;
+          listProfiles: ProfilesResponse;
+          listSubscriptions: SubscriptionsResponse;
+          listWorks: WorksResponse;
+          readAccount: AccountResponse;
+          readFeature: FeatureResponse;
+          readProfile: ProfileResponse;
+          readSubscription: SubscriptionResponse;
+          readWork: WorkResponse;
         }
 
-        interface StatusOutput {
-          code: number;
-          context: string;
-          description: DescriptionCodes;
-          detail: string;
-          message: string;
-          name: string;
-          scope: string;
-          type: string;
+        interface Status {
+          code?: number;
+          context?: string;
+          description?: `${DescriptionCodes}`;
+          detail?: string;
+          isError: boolean;
+          message?: string;
+          name?: string;
+          scope?: string;
+          type?: string;
+        }
+
+        interface StatusResponse {
+          status: Status;
         }
 
         interface Subscription {
-          created_at: Date;
-          document: Record<string, any>;
+          created_at: string;
+          document?: Record<string, any>;
           id_account: string;
           id_subscription: string;
           status: string;
           type: string;
-          updated_at: Date;
+          updated_at: string;
         }
 
-        interface SubscriptionOutput {
-          output: Subscription;
-          status: StatusOutput;
+        interface SubscriptionResponse {
+          output?: Subscription;
+          status: Status;
         }
 
-        interface SubscriptionsOutput {
-          output: Subscription[];
-          status: StatusOutput;
+        interface SubscriptionsResponse {
+          output?: Subscription[];
+          status: Status;
         }
 
         interface UpdateAccountInput {
-          details: Record<string, any>;
-          email: string;
+          document?: Record<string, any>;
+          email?: string;
+          github_token?: string;
+          scope?: string;
         }
 
         interface UpdateFeatureInput {
-          name: string;
-          subscriptionScope: string[];
+          document?: Record<string, any>;
+          name?: string;
+          process_type?: string;
+          subscription_scope?: string[];
         }
 
         interface UpdateProfileInput {
-          name: string;
-          username: string;
+          document?: Record<string, any>;
+          name?: string;
+          username?: string;
         }
 
         interface UpdateSubscriptionInput {
-          document: Record<string, any>;
-          status: string;
-          type: string;
+          document?: Record<string, any>;
+          status?: string;
+          type?: string;
         }
 
         interface UpdateWorkInput {
-          level: number;
-          name: string;
+          document?: Record<string, any>;
+          level?: number;
+          name?: string;
+          process_type?: string;
         }
 
         interface UpsertAccountInput {
-          details: Record<string, any>;
-          email: string[];
+          document?: Record<string, any>;
+          email: string;
+          scope?: string;
         }
 
         interface WhereInput {
-          conditions: WhereInput[];
-          field: string;
-          operator: WhereOperator;
-          value: string;
+          conditions?: WhereInput[];
+          field?: string;
+          operator?: `${WhereOperator}`;
+          value?: string;
         }
 
         interface Work {
-          created_at: Date;
+          created_at: string;
           document: Record<string, any>;
+          has_code_dump: boolean;
           id_account: string;
           id_feature: string;
+          id_pull_request?: string;
+          id_repository: string;
           id_work: string;
           level: number;
           name: string;
-          updated_at: Date;
+          process_status: string;
+          process_type: string;
+          pull_request_name?: string;
+          repository_name?: string;
+          updated_at: string;
         }
 
-        interface WorkOutput {
-          output: Work;
-          status: StatusOutput;
+        interface WorkResponse {
+          output?: Work;
+          status: Status;
         }
 
-        interface WorksOutput {
-          output: Work[];
-          status: StatusOutput;
+        interface WorksResponse {
+          output?: Work[];
+          status: Status;
+        }
+
+        interface commandWorkMutationArgs {
+          account?: string;
+          command: string;
+          work: string;
         }
 
         interface createFeatureMutationArgs {
@@ -294,23 +334,27 @@ export declare global {
         }
 
         interface createProfileMutationArgs {
-          account: string;
+          account?: string;
           input: CreateProfileInput;
         }
 
         interface createSubscriptionMutationArgs {
-          account: string;
+          account?: string;
           input: CreateSubscriptionInput;
         }
 
         interface createWorkMutationArgs {
-          account: string;
+          account?: string;
           feature: string;
           input: CreateWorkInput;
         }
 
+        interface fetchAccountGitHubMutationArgs {
+          account?: string;
+        }
+
         interface removeAccountMutationArgs {
-          account: string;
+          account?: string;
         }
 
         interface removeFeatureMutationArgs {
@@ -318,23 +362,20 @@ export declare global {
         }
 
         interface removeProfileMutationArgs {
-          profile: string;
+          account?: string;
         }
 
         interface removeSubscriptionMutationArgs {
-          subscription: string;
+          account?: string;
         }
 
         interface removeWorkMutationArgs {
+          account?: string;
           work: string;
         }
 
-        interface syncAccountMutationArgs {
-          input: UpsertAccountInput;
-        }
-
         interface updateAccountMutationArgs {
-          account: string;
+          account?: string;
           input: UpdateAccountInput;
         }
 
@@ -344,18 +385,23 @@ export declare global {
         }
 
         interface updateProfileMutationArgs {
+          account?: string;
           input: UpdateProfileInput;
-          profile: string;
         }
 
         interface updateSubscriptionMutationArgs {
+          account?: string;
           input: UpdateSubscriptionInput;
-          subscription: string;
         }
 
         interface updateWorkMutationArgs {
+          account?: string;
           input: UpdateWorkInput;
           work: string;
+        }
+
+        interface upsertAccountMutationArgs {
+          input: UpsertAccountInput;
         }
 
         interface listAccountsQueryArgs {
@@ -375,11 +421,11 @@ export declare global {
         }
 
         interface listWorksQueryArgs {
-          options: OptionsInput;
+          options?: OptionsInput;
         }
 
         interface readAccountQueryArgs {
-          options: OptionsInput;
+          options?: OptionsInput;
         }
 
         interface readFeatureQueryArgs {
@@ -387,15 +433,15 @@ export declare global {
         }
 
         interface readProfileQueryArgs {
-          options: OptionsInput;
+          options?: OptionsInput;
         }
 
         interface readSubscriptionQueryArgs {
-          options: OptionsInput;
+          options?: OptionsInput;
         }
 
         interface readWorkQueryArgs {
-          options: OptionsInput;
+          options?: OptionsInput;
         }
       }
     }
