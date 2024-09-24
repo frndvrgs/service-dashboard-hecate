@@ -11,7 +11,7 @@ export const HomeHeader = () => {
           <HeaderLink href="/" exact>
             Home
           </HeaderLink>
-          <HeaderLink href="/features">Features</HeaderLink>
+          {/* <HeaderLink href="/features">Features</HeaderLink> */}
           <HeaderLink href="/pricing">Pricing</HeaderLink>
         </div>
         <SessionNavigation />

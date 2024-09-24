@@ -80,6 +80,7 @@ export const AccountUpdateForm = ({ account }: AdminAccountUpdateForm) => {
         render={({ field, fieldState }) => (
           <FieldInput
             field={field}
+            type="password"
             fieldState={fieldState}
             name="github_token"
             label="GitHub Personal Access Token"

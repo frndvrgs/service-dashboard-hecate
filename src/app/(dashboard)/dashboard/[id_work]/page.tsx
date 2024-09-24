@@ -40,7 +40,7 @@ const DashboardWork = ({ params }: AdminWorkProps) => {
       <div className="w-full max-w-8xl p-8 bg-[#0a0a0a] border border-[#2d2d2d] rounded-lg shadow-lg space-y-6">
         <Breadcrumb
           items={[
-            { label: "Works", href: "/dashboard" },
+            { label: "My Works", href: "/dashboard" },
             { label: params.id_work },
           ]}
         />

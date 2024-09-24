@@ -208,6 +208,7 @@ export const DashboardWorkCreateForm = () => {
             label="Repository"
             options={repositoryOptions}
             placeholder="Select a Repository"
+            disabled={!repositoryOptions.length}
             status={
               readAccountQuery.isLoading
                 ? "loading"
@@ -233,7 +234,7 @@ export const DashboardWorkCreateForm = () => {
             name="id_feature"
             disabled={!selectedRepository}
             label="Feature"
-            options={data_features?.map((feature) => ({
+            options={data_features?.map((feature: API.GraphQL.v1.Feature) => ({
               value: feature.id_feature,
               label: feature.name,
             }))}

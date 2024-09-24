@@ -32,12 +32,9 @@ const Pricing = () => {
   ];
 
   return (
-    <div className="text-white py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-4xl mx-auto">
-        <h1 className="text-4xl font-bold text-center mb-12">
-          Subscription Plans
-        </h1>
-        <div className="grid md:grid-cols-2 gap-8">
+<div className="text-white relative h-[calc(100vh-65px)] overflow-hidden">
+      <div className="relative z-10 h-full flex items-center justify-center px-4 sm:px-6 lg:px-8">
+      <div className="grid md:grid-cols-2 gap-8">
           {plans.map((plan) => (
             <div
               key={plan.name}

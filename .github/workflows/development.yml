@@ -27,8 +27,5 @@ jobs:
             sleep 5
           done
 
-      # - name: Run circular dependencies check
-      #   run: npm run dpdm
-
-      # - name: Run tests
-      #   run: npm run test
+      - name: Run tests
+        run: npm run test

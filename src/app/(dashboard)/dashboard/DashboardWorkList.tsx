@@ -4,6 +4,7 @@ import { useGraphQLQuery } from "@/hooks/useGraphQL";
 import { LIST_WORKS } from "@/interface/v1/schemas/product";
 import { InfoContainer } from "@/components/InfoContainer";
 import { InfoItem } from "@/components/InfoItem";
+import { format } from 'date-fns';
 
 export const DashboardWorkList = () => {
   // external hooks
@@ -40,7 +41,7 @@ export const DashboardWorkList = () => {
 
   return (
     <div className="space-y-6">
-      {data_works.map((work) => (
+      {data_works.map((work: API.GraphQL.v1.Work) => (
         <InfoContainer
           key={work.id_work}
           showControls
@@ -49,8 +50,12 @@ export const DashboardWorkList = () => {
           linkTitle="Work Settings"
         >
           <InfoItem label="Name" value={work.name} />
-          {work.document?.feature.name && (
-            <InfoItem label="Feature" value={work.document?.feature.name} />
+          <InfoItem 
+            label="Created At" 
+            value={format(new Date(work.created_at), 'dd/MM/yyyy')} 
+          />
+          {work.document?.feature?.name && (
+            <InfoItem label="Feature" value={work.document.feature.name} />
           )}
           <InfoItem
             label="Allocated Resource Usage"

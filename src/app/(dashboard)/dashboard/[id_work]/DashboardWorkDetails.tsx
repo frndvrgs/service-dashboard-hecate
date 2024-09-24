@@ -58,7 +58,7 @@ export const DashboardWorkDetails = ({
     if (data) {
       console.log("remove work:", data);
       await queryClient.invalidateQueries({ queryKey: ["works"] });
-      router.push("/dashboard/works");
+      router.push("/dashboard");
     }
   };
 

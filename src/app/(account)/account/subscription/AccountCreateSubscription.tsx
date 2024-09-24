@@ -70,7 +70,7 @@ export const AccountCreateSubscription = () => {
               <ul className="mb-8 flex-grow">
                 {plan.features.map((feature) => (
                   <li key={feature} className="flex items-center mb-3">
-                    <CheckIcon className="h-5 w-5 text-green-500 mr-2" />
+                    <CheckIcon className="h-5 w-5 text-red-500 mr-2" />
                     {feature}
                   </li>
                 ))}
@@ -80,7 +80,7 @@ export const AccountCreateSubscription = () => {
                   handleCreateSubscription(plan.name.toLowerCase())
                 }
                 label={`Subscribe to ${plan.name}`}
-                className="bg-blue-600 hover:bg-blue-700 text-white w-full"
+                className="bg-red-600 hover:bg-red-500 text-white w-full"
                 status={
                   operationStatus[
                     `createSubscription_${plan.name.toLowerCase()}`
